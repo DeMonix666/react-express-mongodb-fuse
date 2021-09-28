@@ -13,8 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FuseAnimate from '@fuse/core/FuseAnimate';
-import { getUsers } from '../store/usersSlice';
 import MyPagination from 'app/fuse-layouts/shared-components/MyPagination';
+import { getUsers } from '../store/usersSlice';
 
 function UsersTable(props) {
     const dispatch = useDispatch();

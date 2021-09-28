@@ -5,16 +5,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { motion } from 'framer-motion';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import reducer from './store';
-import DashboardTable from './DashboardTable';
-import { clearBasket } from './store/dashboardSlice';
+import reducer from '../store';
+import CartTable from './CartTable';
+import { clearBasket } from '../store/dashboardSlice';
 import { showMessage } from 'app/store/fuse/messageSlice';
 
 const useStyles = makeStyles({
 	layoutRoot: {}
 });
 
-function Dashboard() {
+function Cart() {
 	const classes = useStyles();
     const dispatch = useDispatch();
     const user = useSelector(({ auth }) => auth.user);
@@ -76,11 +76,11 @@ function Dashboard() {
             }
 			content={
 				<div className="p-24">
-					<DashboardTable />
+					<CartTable />
 				</div>
 			}
 		/>
 	);
 }
 
-export default withReducer('dashboardReducer', reducer)(Dashboard);
+export default withReducer('dashboardReducer', reducer)(Cart);

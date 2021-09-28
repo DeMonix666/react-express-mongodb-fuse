@@ -24,10 +24,9 @@ export const saveItem = createAsyncThunk('items/save', async (params, { dispatch
     if (data.code === 1){
         dispatch(resetItem());
         dispatch(newItem());
-        return data.data;
-    } else {
-        return null;
     }
+
+    return data.code === 1 ? data.data : null;
 });
 
 const itemSlice = createSlice({

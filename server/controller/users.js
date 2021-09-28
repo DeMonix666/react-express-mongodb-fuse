@@ -9,6 +9,7 @@ exports.register = async (req, res) => {
         username: req.sanitize(req.body.username),
         password: req.sanitize(req.body.password),
         status: 1,
+        type: 1, // default admin type
         created_at: helper.timestamp(),
         token: null
     }

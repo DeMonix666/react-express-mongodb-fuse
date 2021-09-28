@@ -13,8 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FuseAnimate from '@fuse/core/FuseAnimate';
-import { getItems } from '../store/itemsSlice';
 import MyPagination from 'app/fuse-layouts/shared-components/MyPagination';
+import { getItems } from '../store/itemsSlice';
 
 function ItemsTable(props) {
     const dispatch = useDispatch();
@@ -36,7 +36,7 @@ function ItemsTable(props) {
     }, [dispatch, init]);
    
     const handleClick = _id => {
-        props.history.push("/item/list/" + _id);        
+        props.history.push(`/item/list/${_id}`);        
     };
 
     function handleChangePage(event, value) {

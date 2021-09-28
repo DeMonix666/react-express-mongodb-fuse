@@ -7,7 +7,8 @@ const helmet = require("helmet");
 const requestIp = require("request-ip");
 const rateLimit = require("express-rate-limit");
 const cors = require('cors');
-require("./dbconfig");
+const helper = require("@helper");
+const logs = require("@model/logs");
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -28,13 +29,40 @@ app.use(bodyParser.urlencoded({
 /**
  * Request Limiter
  */
-if(process.env.ENV !== "dev") {
-    const limiter = rateLimit({
-        windowMs: 60 * 1000,
-        max: 200
+const limiter = rateLimit({
+    windowMs: process.env.MAX_REQUEST_TIMELIMIT * 60 * 1000,
+    max: process.env.MAX_REQUEST_LIMIT,
+    handler: async (req, res) => {
+        const ip = req.clientIp;
+
+        const log = await logs.update({
+            ip: ip,
+            url: req.originalUrl,
+            type: 2, // error spamming
+            created_at: helper.timestamp()
+        });
+
+        return res.status(666).json({
+          error: 'You sent too many requests. Please wait a while then try again'
+        })
+    }
+    // message: {
+    //     code: 0,
+    //     message: "Too many requests from this IP, please try again after an hour"
+    // }
+});
+
+const logRequest = async(req, res, next) => {
+    const ip = req.clientIp;
+
+    const log = await logs.update({
+        ip: ip,
+        url: req.originalUrl,
+        type: 1, // success
+        created_at: helper.timestamp()
     });
 
-    app.use(limiter);
+    next();
 }
 
 /**
@@ -44,9 +72,9 @@ const users = require("./routes/users");
 const items = require("./routes/items");
 const test = require("./routes/test");
 
-app.use("/api/users", users);
-app.use("/api/items", items);
-app.use("/api/test", test);
+app.use("/api/users", logRequest, limiter, users);
+app.use("/api/items", logRequest, limiter, items);
+app.use("/api/test", logRequest, limiter, test);
 
 /**
  * Error handlers
@@ -62,6 +90,7 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
+
     res.json({
         code: 0,
         message: "system failed",

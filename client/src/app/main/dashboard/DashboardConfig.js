@@ -1,4 +1,4 @@
-import Dashboard from './Dashboard';
+import Cart from './cart/Cart';
 
 const DashboardConfig = {
 	settings: {
@@ -9,7 +9,7 @@ const DashboardConfig = {
 	routes: [
 		{
 			path: '/dashboard',
-			component: Dashboard
+			component: Cart
 		}
 	]
 };

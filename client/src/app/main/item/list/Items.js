@@ -2,8 +2,8 @@ import FusePageCarded from '@fuse/core/FusePageCarded';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import withReducer from 'app/store/withReducer';
 import { Typography, Button, Icon } from '@material-ui/core';
-import reducer from '../store';
 import { Link } from 'react-router-dom';
+import reducer from '../store';
 import ItemsTable from './ItemsTable';
 
 function Items() {
