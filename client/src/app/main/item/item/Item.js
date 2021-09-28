@@ -83,8 +83,7 @@ function Item(props) {
     }, [dispatch]);
 
     function handleSaveItem() {
-        let params = getValues();
-        params['_id'] = item ? item._id : null; 
+        const params = {...getValues(), ...{_id : item ? item._id : null}};
 
         dispatch(saveItem(params)).then(action => {
             dispatch(resetItem());
