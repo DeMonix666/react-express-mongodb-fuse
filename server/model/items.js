@@ -82,6 +82,10 @@ exports.findByToken = async (token) => {
 }
 
 exports.update = async post => {
+    let data = post;
+
+    delete(data['_id']);
+
     return await Items.updateOne({
         name: post.name
     },{

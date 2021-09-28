@@ -15,7 +15,6 @@ exports.save = async (req, res) => {
     }
 
     let isPostEmpty = {
-        _id: post.name,
         name: post.name,
         price: post.price,
         quantity: post.quantity
@@ -26,7 +25,9 @@ exports.save = async (req, res) => {
     }
 
     let item = await items.findByName(post.name);
-    if(item && item._id != post._id){
+    console.log(post);
+    console.log(item);
+    if(item && post._id && item._id != post._id){
         return helper.error(res, 'Item already exists');
     }
 

@@ -83,9 +83,12 @@ function Item(props) {
     }, [dispatch]);
 
     function handleSaveItem() {
-        dispatch(saveItem(getValues())).then(action => {
-                    dispatch(resetItem());
-                });
+        let params = getValues();
+        params['_id'] = item ? item._id : null; 
+
+        dispatch(saveItem(params)).then(action => {
+            dispatch(resetItem());
+        });
     }
 
     return (
