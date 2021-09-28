@@ -1,4 +1,4 @@
-##App
+## App
 
 Simple Shopping Cart
 
@@ -24,11 +24,11 @@ URL: http://reacttest.systemsolution.me
 
 ## Test Accounts
 
-###Admin
+### Admin
 	username: admin<br />
 	password: admin1234
 
-###Customer
+### Customer
 	username: dlasthitter
 	password: admin1234
 
