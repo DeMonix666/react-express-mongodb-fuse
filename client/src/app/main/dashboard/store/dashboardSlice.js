@@ -43,7 +43,7 @@ const dashboardSlice = createSlice({
             const item = action.payload;
             const index = state.basket.findIndex(_item => _item._id === item._id);
 
-            if (index == -1){
+            if (index === -1){
                 state.basket.push({
                     _id: item._id,
                     name : item.name,
@@ -51,7 +51,7 @@ const dashboardSlice = createSlice({
                     quantity: 1
                 });
             } else {
-                state.basket[index].quantity++;
+                state.basket[index].quantity += 1;
             }
 
             state.total += item.price;

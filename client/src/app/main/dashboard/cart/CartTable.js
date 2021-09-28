@@ -64,8 +64,8 @@ function DashboardTable(props) {
         
     }, [dispatch, init]);
    
-    const handleClick = (item) => {
-        dispatch(addToCart(item))
+    const handleClick = (n) => {
+        dispatch(addToCart(n))
         .then((action) => {
             console.log('dashboard.basket');
             console.log(dashboard.basket.length);

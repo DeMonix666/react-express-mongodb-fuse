@@ -5,10 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { motion } from 'framer-motion';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { showMessage } from 'app/store/fuse/messageSlice';
 import reducer from '../store';
 import CartTable from './CartTable';
 import { clearBasket } from '../store/dashboardSlice';
-import { showMessage } from 'app/store/fuse/messageSlice';
 
 const useStyles = makeStyles({
 	layoutRoot: {}
@@ -27,7 +27,6 @@ function Cart() {
     const handleCheckout = () => {
     	if(user.role.length === 0){
     		dispatch(showMessage({ message: 'Please login' }));
-    		return false;
     	}
     }
 
