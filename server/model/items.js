@@ -82,13 +82,13 @@ exports.findByToken = async (token) => {
 }
 
 exports.update = async post => {
-    let data = post;
+    const query = (post._id && post._id != 'new') ? { _id: post._id } : { name: post.name };
 
-    delete(data['_id']);
+    delete(post['_id']);
 
-    return await Items.updateOne({
-        name: post.name
-    },{
+    console.log(query);
+
+    return await Items.updateOne(query, {
         $set: post
     },
     {
