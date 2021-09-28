@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
-import FooterLayout from './components/FooterLayout';
 import LeftSideLayout from './components/LeftSideLayout';
 import NavbarWrapperLayout from './components/NavbarWrapperLayout';
 import RightSideLayout from './components/RightSideLayout';
@@ -57,10 +56,6 @@ function Layout(props) {
 
 						{props.children}
 					</div>
-
-					{config.footer.display && (
-						<FooterLayout className={config.footer.style === 'fixed' && 'sticky bottom-0'} />
-					)}
 				</main>
 
 				{config.navbar.display && config.navbar.position === 'right' && <NavbarWrapperLayout />}

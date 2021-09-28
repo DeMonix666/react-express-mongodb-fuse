@@ -61,3 +61,5 @@ exports.success = (res, message, data = {}, extraData={}) => {
 
     return true;
 }
+
+exports.pageLimit = 10;

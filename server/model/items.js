@@ -2,39 +2,37 @@ const mongoose = require("mongoose");
 const {conn} = require.main.require('./dbconfig');
 const helper = require("@helper");
 
-const UsersSchema = mongoose.Schema(
+const ItemsSchema = mongoose.Schema(
   {
-    username: {type: String, require: true, default: null},
-    password: {type: String, require: true, default: null},
+    name: {type: String, require: true, default: null},
+    quantity: {type: Number, require: true, default: null},
     status: {type: Number, require: true, default: 1},
-    type: {type: Number, require: true, default: 1},
-    created_at: {type: String, require: true, default: null},
-
-    /**
-     * Access
-     */
-    token:  {type: String, require: false, default: null},
-    login_at: {type: String, require: true, default: null}
+    price: {type: Number, require: true, default: 1},
+    created_at: {type: String, require: true, default: null}
   },
   {
     versionKey: false
   }
 );
 
-UsersSchema.index({username: 1}, {unique: 1});
-const Users = conn.model("Users", UsersSchema);
+const defaultReturn = {
+    _id: 1,
+    name: 1,
+    quantity: 1,
+    price: 1,
+    status: 1,
+    created_at: 1
+};
 
-exports.findUsername = async (username) => {
-    return await Users.findOne({
-        username: username
+ItemsSchema.index({name: 1}, {unique: 1});
+const Items = conn.model("Items", ItemsSchema);
+
+exports.findByName = async (name) => {
+    return await Items.findOne({
+        name: name
     }, 
-    {
-        _id: 1,
-        username: 1,
-        password: 1,
-        type: 1,
-        status: 1
-    })
+        defaultReturn
+    )
     .then(value => {
         if(value){
             return value;
@@ -48,16 +46,11 @@ exports.findUsername = async (username) => {
 }
 
 exports.findById = async (_id) => {
-    return await Users.findOne({
-        _id: _id
-    }, 
-    {
-        _id: 1,
-        username: 1,
-        password: 1,
-        type: 1,        
-        status: 1
-    })
+    return await Items.findOne({
+            _id: _id
+        }, 
+        defaultReturn
+    )
     .then(value => {
         if(value){
             return value;
@@ -71,16 +64,11 @@ exports.findById = async (_id) => {
 }
 
 exports.findByToken = async (token) => {
-    return await Users.findOne({
-        token: token
-    }, 
-    {
-        _id: 1,
-        username: 1,
-        password: 1,
-        type: 1,
-        status: 1
-    })
+    return await Items.findOne({
+            token: token
+        }, 
+        defaultReturn
+    )
     .then(value => {
         if(value){
             return value;
@@ -94,8 +82,8 @@ exports.findByToken = async (token) => {
 }
 
 exports.update = async post => {
-    return await Users.updateOne({
-        username: post.username
+    return await Items.updateOne({
+        name: post.name
     },{
         $set: post
     },
@@ -115,7 +103,7 @@ exports.update = async post => {
 }
 
 exports.delete = async (_id) => {
-    return await Users.deleteOne({
+    return await Items.deleteOne({
         _id: _id
     })
     .then(value => {
@@ -132,15 +120,15 @@ exports.delete = async (_id) => {
 
 exports.search = async post => {
   let query = {
-    username: post.username
+    name: post.name
   }
 
-  return await Users.find(query, {
-    password: 0
+  return await Items.find(query, {
+    quantity: 0
   })
   .limit(10)
   .sort({
-    username: 1
+    name: 1
   })
   .then(value => {
     if(value.length >= 1){
@@ -155,15 +143,14 @@ exports.search = async post => {
 }
 
 exports.list = async (page) => {
-    return await Users.aggregate([
-        {
-            $project: {
-                password: 0
-            }
-        },
+    return await Items.aggregate([
+        // {
+        //     $project: {
+        //     }
+        // },
         {
             $sort: {
-                username: 1
+                name: 1
             }
         },
         {

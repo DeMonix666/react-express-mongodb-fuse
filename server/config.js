@@ -41,8 +41,11 @@ if(process.env.ENV !== "dev") {
  * Routing
  */
 const users = require("./routes/users");
+const items = require("./routes/items");
 const test = require("./routes/test");
+
 app.use("/api/users", users);
+app.use("/api/items", items);
 app.use("/api/test", test);
 
 /**

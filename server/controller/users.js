@@ -3,7 +3,6 @@ const stringify = require("json-stable-stringify");
 const { v4: uuidv4 } = require("uuid");
 const helper = require("@helper");
 const users = require("@model/users");
-//const db_password_try = require("@model/password_try");
 
 exports.register = async (req, res) => {
     let post = {
@@ -112,8 +111,19 @@ exports.validate = async(req, res, next) => {
     next();
 }
 
-exports.details = async (req, res) => {
+exports.profile = async (req, res) => {
     return helper.success(res, '', req.user);
+}
+
+exports.detailsbyid = async (req, res) => {
+    const id = req.sanitize(req.body.id);
+
+    let user = await users.findById(id);
+    if(!user){
+        return helper.error(res, 'User not found');
+    }
+
+    return helper.success(res, '', user);
 }
 
 exports.logout = async (req, res) => {
@@ -123,4 +133,13 @@ exports.logout = async (req, res) => {
     });
 
     return helper.success(res, 'Successfully logout');
+}
+
+exports.list = async (req, res) => {
+    let page = req.sanitize(req.body.page);
+    if (page == undefined) page = 0;
+
+    let result = await users.list(page);
+
+    return helper.success(res, '', result);
 }

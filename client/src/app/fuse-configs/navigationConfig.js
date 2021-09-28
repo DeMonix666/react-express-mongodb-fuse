@@ -27,7 +27,7 @@ const navigationConfig = [
 				title: 'Customer',
 				type: 'item',
 				icon: 'whatshot',
-				url: '/users',
+				url: '/user/list',
 				role: [1]
 			},
 			{
@@ -35,7 +35,7 @@ const navigationConfig = [
 				title: 'Items',
 				type: 'item',
 				icon: 'whatshot',
-				url: '/items',
+				url: '/item/list',
 				role: [1]
 			}
 		]
