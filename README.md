@@ -25,7 +25,7 @@ URL: http://reacttest.systemsolution.me
 ## Test Accounts
 
 ### Admin
-	username: admin<br />
+	username: admin
 	password: admin1234
 
 ### Customer
