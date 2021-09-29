@@ -5,7 +5,8 @@ import {
     TableBody, 
     TableCell, 
     TableHead, 
-	TableRow, 
+	TableRow,
+    TablePagination,
     Typography
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -21,12 +22,14 @@ function UsersTable(props) {
     const users    = useSelector(({ userReducer }) => userReducer.users);
 
     const [loading, setLoading] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [init, setInit] = useState(true);
 
 	useEffect(() => {     
         if (init){
             dispatch(getUsers({
-                page: 0
+                page: 0,
+                limit: rowsPerPage
             }))
             .then(() => setLoading(false));
 
@@ -40,11 +43,22 @@ function UsersTable(props) {
         // props.history.push("/user/detail/" + _id);        
     };
 
-    function handleChangePage(event, value) {
+    const handleChangePage = (event, value) => {
         setLoading(true);
 
         dispatch(getUsers({
-            page: value
+            page: value,
+            limit: rowsPerPage
+        }))
+        .then(() => setLoading(false));
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value);
+
+        dispatch(getUsers({
+            page: 0,
+            limit: event.target.value
         }))
         .then(() => setLoading(false));
     }
@@ -114,7 +128,21 @@ function UsersTable(props) {
                 </Table>
             </FuseScrollbars>
 
-            <MyPagination pageCount={users.pagination.page} onChangePage={handleChangePage} />
+            <TablePagination
+                className="flex-shrink-0 border-t-1"
+                component="div"
+                count={users.pagination.total}
+                rowsPerPage={users.pagination.limit}
+                page={users.pagination.page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page'
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page'
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }

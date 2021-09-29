@@ -6,6 +6,7 @@ import {
     TableCell, 
     TableHead, 
 	TableRow, 
+    TablePagination,
     Typography
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -21,12 +22,14 @@ function LogsTable(props) {
     const logs    = useSelector(({ logReducer }) => logReducer.logs);
 
     const [loading, setLoading] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(100);
     const [init, setInit] = useState(true);
 
 	useEffect(() => {     
         if (init){
             dispatch(getLogs({
-                page: 0
+                page: 0,
+                limit: rowsPerPage
             }))
             .then(() => setLoading(false));
 
@@ -39,11 +42,22 @@ function LogsTable(props) {
         console.log(_id);
     };
 
-    function handleChangePage(event, value) {
+    const handleChangePage = (event, value) => {
         setLoading(true);
 
         dispatch(getLogs({
-            page: value
+            page: value,
+            limit: rowsPerPage
+        }))
+        .then(() => setLoading(false));
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value);
+
+        dispatch(getLogs({
+            page: 0,
+            limit: event.target.value
         }))
         .then(() => setLoading(false));
     }
@@ -69,7 +83,7 @@ function LogsTable(props) {
             <FuseScrollbars className="flex-grow overflow-x-auto">                
                 <Table stickyHeader className="min-w-xl" aria-labelledby="tableTitle">
                     <TableHead>
-                        <TableRow className="h-40">
+                        <TableRow className="h-48 sm:h-64">
                             <TableCell className="p-4 md:p-16">IP</TableCell>
                             <TableCell className="p-4 md:p-16">URL</TableCell>
                             <TableCell className="p-4 md:p-16">Type</TableCell>
@@ -115,7 +129,21 @@ function LogsTable(props) {
                 </Table>
             </FuseScrollbars>
 
-            <MyPagination pageCount={logs.pagination.pages} onChangePage={handleChangePage} />
+            <TablePagination
+                className="flex-shrink-0 border-t-1"
+                component="div"
+                count={logs.pagination.total}
+                rowsPerPage={logs.pagination.limit}
+                page={logs.pagination.page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page'
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page'
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }

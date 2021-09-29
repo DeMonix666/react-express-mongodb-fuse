@@ -20,7 +20,7 @@ function Users() {
                         <div className="flex items-center">
                             <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                                 <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
-                                    Users
+                                    Customers
                                 </Typography>
                             </FuseAnimate>
                         </div>                        

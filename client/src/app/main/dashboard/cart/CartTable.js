@@ -8,6 +8,7 @@ import {
     TableCell, 
     TableHead, 
 	TableRow, 
+    TablePagination,
     Typography
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -39,6 +40,7 @@ function CartTable(props) {
     const cart    = useSelector(({ dashboardReducer }) => dashboardReducer.cart);
     const classes = useStyles(props);
     const [loading, setLoading] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [init, setInit] = useState(true);
 
     const container = {
@@ -57,7 +59,8 @@ function CartTable(props) {
 	useEffect(() => {     
         if (init){
             dispatch(getItems({
-                page: 0
+                page: 0,
+                limit: rowsPerPage
             }))
             .then(() => setLoading(false));
 
@@ -77,7 +80,18 @@ function CartTable(props) {
         setLoading(true);
 
         dispatch(getItems({
-            page: value
+            page: value,
+            limit: rowsPerPage
+        }))
+        .then(() => setLoading(false));
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value);
+
+        dispatch(getItems({
+            page: 0,
+            limit: event.target.value
         }))
         .then(() => setLoading(false));
     }
@@ -142,7 +156,21 @@ function CartTable(props) {
                 </div>
             </FuseScrollbars>
 
-            <MyPagination pageCount={items.pagination.pages} onChangePage={handleChangePage} />
+            <TablePagination
+                className="flex-shrink-0 border-t-1"
+                component="div"
+                count={items.pagination.total}
+                rowsPerPage={items.pagination.limit}
+                page={items.pagination.page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page'
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page'
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }

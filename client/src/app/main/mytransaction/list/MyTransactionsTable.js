@@ -5,7 +5,8 @@ import {
     TableBody, 
     TableCell, 
     TableHead, 
-	TableRow, 
+	TableRow,
+    TablePagination,
     Typography,
     Button
 } from '@material-ui/core';
@@ -22,12 +23,14 @@ function MyTransactionsTable(props) {
     const transactions = useSelector(({ myTransactionReducer }) => myTransactionReducer.transactions);
 
     const [loading, setLoading] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [init, setInit] = useState(true);
 
 	useEffect(() => {     
         if (init){
             dispatch(getTransactions({
-                page: 0
+                page: 0,
+                limit: rowsPerPage
             }))
             .then(() => setLoading(false));
 
@@ -36,15 +39,31 @@ function MyTransactionsTable(props) {
         
     }, [dispatch, init]);
    
-    const handleClick = _id => {
-        //props.history.push(`/item/list/${_id}`);        
+    const handleClick = (transaction) => {
+        props.setDialog({
+            ...props.dialog, 
+            open: true 
+        });
+
+        props.setTransaction(transaction);       
     };
 
-    function handleChangePage(event, value) {
+    const handleChangePage = (event, value) => {
         setLoading(true);
 
         dispatch(getTransactions({
-            page: value
+            page: value,
+            limit: rowsPerPage
+        }))
+        .then(() => setLoading(false));
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value);
+
+        dispatch(getTransactions({
+            page: 0,
+            limit: event.target.value
         }))
         .then(() => setLoading(false));
     }
@@ -121,7 +140,21 @@ function MyTransactionsTable(props) {
             </FuseScrollbars>
 
             {transactions.collection.length > 0 && (
-                <MyPagination pageCount={transactions.pagination.pages} onChangePage={handleChangePage} />
+                <TablePagination
+                    className="flex-shrink-0 border-t-1"
+                    component="div"
+                    count={transactions.pagination.total}
+                    rowsPerPage={transactions.pagination.limit}
+                    page={transactions.pagination.page}
+                    backIconButtonProps={{
+                        'aria-label': 'Previous Page'
+                    }}
+                    nextIconButtonProps={{
+                        'aria-label': 'Next Page'
+                    }}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
             )}
         </div>
     );

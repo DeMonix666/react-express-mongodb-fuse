@@ -4,7 +4,8 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 
 export const getItems = createAsyncThunk('items/list', async (params, { dispatch }) => {
     const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/items/list`, {
-        page: params.page
+        page: params.page,
+        limit: params.limit
     });
 
     const data = await response.data;

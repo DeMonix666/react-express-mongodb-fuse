@@ -5,8 +5,10 @@ import {
     TableBody, 
     TableCell, 
     TableHead, 
-	TableRow, 
-    Typography
+	TableRow,
+    TablePagination,
+    Typography,
+    Button
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,12 +23,14 @@ function ItemsTable(props) {
     const items    = useSelector(({ itemReducer }) => itemReducer.items);
 
     const [loading, setLoading] = useState(true);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [init, setInit] = useState(true);
 
 	useEffect(() => {     
         if (init){
             dispatch(getItems({
-                page: 0
+                page: 0,
+                limit: rowsPerPage
             }))
             .then(() => setLoading(false));
 
@@ -39,11 +43,22 @@ function ItemsTable(props) {
         props.history.push(`/item/list/${_id}`);        
     };
 
-    function handleChangePage(event, value) {
+    const handleChangePage = (event, value) => {
         setLoading(true);
 
         dispatch(getItems({
-            page: value
+            page: value,
+            limit: rowsPerPage
+        }))
+        .then(() => setLoading(false));
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value);
+
+        dispatch(getItems({
+            page: 0,
+            limit: event.target.value
         }))
         .then(() => setLoading(false));
     }
@@ -74,6 +89,7 @@ function ItemsTable(props) {
                             <TableCell className="p-4 md:p-16">Name</TableCell>
                             <TableCell className="p-4 md:p-16">Price</TableCell>
                             <TableCell className="p-4 md:p-16">Quantity</TableCell>
+                            <TableCell className="p-4 md:p-16">Action</TableCell>
                         </TableRow>
                     </TableHead>
 
@@ -86,7 +102,6 @@ function ItemsTable(props) {
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={n._id}
-                                        onClick={event => handleClick(n._id)}
                                     >
                                         
                                         <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">
@@ -105,7 +120,18 @@ function ItemsTable(props) {
 
                                         <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">
                                             {n.quantity}
-                                        </TableCell> 
+                                        </TableCell>
+
+                                        <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">
+                                            <Button
+                                                className="whitespace-nowrap mx-4"
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={event => handleClick(n._id)}
+                                            >
+                                                Details
+                                            </Button>
+                                        </TableCell>  
                                     </TableRow>
                                 );
                             })}
@@ -113,7 +139,21 @@ function ItemsTable(props) {
                 </Table>
             </FuseScrollbars>
 
-            <MyPagination pageCount={items.pagination.pages} onChangePage={handleChangePage} />
+            <TablePagination
+                className="flex-shrink-0 border-t-1"
+                component="div"
+                count={items.pagination.total}
+                rowsPerPage={items.pagination.limit}
+                page={items.pagination.page}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page'
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page'
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }

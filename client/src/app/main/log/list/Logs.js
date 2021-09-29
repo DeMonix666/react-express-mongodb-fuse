@@ -28,9 +28,7 @@ function Logs() {
                 </div>                
             }
             content={
-                <div className="w-full flex flex-col">
-                    <LogsTable />
-                </div>
+                <LogsTable />
             }
             innerScroll
         />

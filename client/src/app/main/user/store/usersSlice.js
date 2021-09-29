@@ -3,7 +3,8 @@ import axios from "axios";
 
 export const getUsers = createAsyncThunk('api/users/list', async params => {
     const response = await axios.get(`${process.env.REACT_APP_ENDPOINT}/users/list`, {
-        page: params.page
+        page: params.page,
+        limit: params.limit
     });
 
     const data = await response.data;
