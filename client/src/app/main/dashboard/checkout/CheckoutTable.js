@@ -53,15 +53,6 @@ function CheckoutTable(props) {
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 }
     };
-
-    const handleChangePage = (event, value) => {
-        setLoading(true);
-
-        dispatch(getItems({
-            page: value
-        }))
-        .then(() => setLoading(false));
-    }
     
     const handleRemove = (n) => {
         dispatch(removeItem(n))

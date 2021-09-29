@@ -71,6 +71,7 @@ function LogsTable(props) {
                     <TableHead>
                         <TableRow className="h-40">
                             <TableCell className="p-4 md:p-16">IP</TableCell>
+                            <TableCell className="p-4 md:p-16">URL</TableCell>
                             <TableCell className="p-4 md:p-16">Type</TableCell>
                             <TableCell className="p-4 md:p-16">Time</TableCell>
                             <TableCell className="p-4 md:p-16">Message</TableCell>
@@ -90,6 +91,10 @@ function LogsTable(props) {
                                     >
                                         <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">
                                             {n.ip}
+                                        </TableCell> 
+
+                                        <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">
+                                            {n.url}
                                         </TableCell> 
                                         
                                         <TableCell className="p-4 md:p-16 truncate" component="td" scope="row">

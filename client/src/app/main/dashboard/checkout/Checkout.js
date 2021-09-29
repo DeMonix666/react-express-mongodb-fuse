@@ -1,8 +1,7 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import { useTheme } from '@material-ui/core/styles';
 import { Typography, Button, Icon } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import withReducer from 'app/store/withReducer';
