@@ -58,7 +58,7 @@ exports.list = async (page, pageLimit = 10) => {
         // },
         {
             $sort: {
-                created_at: 1
+                created_at: -1
             }
         },
         {
