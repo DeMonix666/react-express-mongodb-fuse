@@ -19,7 +19,8 @@ import { motion } from 'framer-motion';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import MyPagination from 'app/fuse-layouts/shared-components/MyPagination';
-import { getItems, addToCart } from '../store/dashboardSlice';
+import { getItems} from '../store/itemsSlice';
+import { addToCart } from '../store/cartSlice';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -32,9 +33,10 @@ const useStyles = makeStyles(theme => ({
     newBoard: {}
 }));
 
-function DashboardTable(props) {
+function CartTable(props) {
     const dispatch = useDispatch();
-    const dashboard    = useSelector(({ dashboardReducer }) => dashboardReducer.dashboard);
+    const items    = useSelector(({ dashboardReducer }) => dashboardReducer.items);
+    const cart    = useSelector(({ dashboardReducer }) => dashboardReducer.cart);
     const classes = useStyles(props);
     const [loading, setLoading] = useState(true);
     const [init, setInit] = useState(true);
@@ -67,8 +69,7 @@ function DashboardTable(props) {
     const handleClick = (n) => {
         dispatch(addToCart(n))
         .then((action) => {
-            console.log('dashboard.basket');
-            console.log(dashboard.basket.length);
+            console.log(cart.basket.length);
         })
     };
 
@@ -85,7 +86,7 @@ function DashboardTable(props) {
         return <FuseLoading />;
     }
 
-    if (dashboard.collection.length <= 0) {
+    if (items.collection.length <= 0) {
         return (
             <FuseAnimate delay={100}>
                 <div className="flex flex-1 items-center justify-center h-full">
@@ -109,7 +110,7 @@ function DashboardTable(props) {
                             className="flex flex-wrap w-full justify-center py-32 px-16"
                         >
 
-                            {dashboard.collection.map(n => {
+                            {items.collection.map(n => {
                                 return (
                                     <motion.div variants={item} className="w-224 h-224 p-16" key={n._id}>
                                         <Paper
@@ -141,9 +142,9 @@ function DashboardTable(props) {
                 </div>
             </FuseScrollbars>
 
-            <MyPagination pageCount={dashboard.pagination.pages} onChangePage={handleChangePage} />
+            <MyPagination pageCount={items.pagination.pages} onChangePage={handleChangePage} />
         </div>
     );
 }
 
-export default withRouter(DashboardTable);
+export default withRouter(CartTable);

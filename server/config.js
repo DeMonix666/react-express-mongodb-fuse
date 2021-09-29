@@ -61,11 +61,13 @@ const logRequest = async(req, res, next) => {
 const users = require("./routes/users");
 const items = require("./routes/items");
 const logs = require("./routes/logs");
+const transactions = require("./routes/transactions");
 const test = require("./routes/test");
 
 app.use("/api/users", logRequest, limiter, users);
 app.use("/api/items", logRequest, limiter, items);
 app.use("/api/logs", logRequest, limiter, logs);
+app.use("/api/transactions", logRequest, limiter, transactions);
 app.use("/api/test", logRequest, limiter, test);
 
 /**

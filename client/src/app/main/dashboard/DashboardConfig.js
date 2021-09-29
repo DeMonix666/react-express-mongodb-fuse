@@ -1,4 +1,5 @@
 import Cart from './cart/Cart';
+import Checkout from './checkout/Checkout';
 
 const DashboardConfig = {
 	settings: {
@@ -10,6 +11,10 @@ const DashboardConfig = {
 		{
 			path: '/dashboard',
 			component: Cart
+		},
+		{
+			path: '/checkout',
+			component: Checkout
 		}
 	]
 };

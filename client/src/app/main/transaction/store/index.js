@@ -1,9 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import cart from './cartSlice';
-import items from './itemsSlice';
+import transactions from './transactionsSlice';
 
 const reducer = combineReducers({
-	cart,
-	items
+	transactions
 });
 export default reducer;

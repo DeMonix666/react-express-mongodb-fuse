@@ -8,17 +8,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import reducer from '../store';
 import CartTable from './CartTable';
-import { clearBasket } from '../store/dashboardSlice';
+import { clearBasket } from '../store/cartSlice';
 
 const useStyles = makeStyles({
 	layoutRoot: {}
 });
 
-function Cart() {
-	const classes = useStyles();
+function Cart(props) {
+    const classes  = useStyles();
     const dispatch = useDispatch();
-    const user = useSelector(({ auth }) => auth.user);
-    const dashboard    = useSelector(({ dashboardReducer }) => dashboardReducer.dashboard);
+    const user     = useSelector(({ auth }) => auth.user);
+    const cart     = useSelector(({ dashboardReducer }) => dashboardReducer.cart);
 
     const handleClearBasket = () => {
     	dispatch(clearBasket())
@@ -27,7 +27,15 @@ function Cart() {
     const handleCheckout = () => {
     	if(user.role.length === 0){
     		dispatch(showMessage({ message: 'Please login' }));
+            return;
     	}
+
+        if(cart.basket.length === 0){
+            dispatch(showMessage({ message: 'Cart is empty' }));
+            return;
+        }
+
+        props.history.push(`/checkout`);   
     }
 
 	return (
@@ -67,7 +75,7 @@ function Cart() {
                             color="secondary"
                             onClick={event => handleCheckout()}
                         >
-                        	<span className="mx-4">{dashboard.total}</span>
+                        	<span className="mx-4">{cart.total}</span>
                             <span>Checkout</span>
                         </Button>	                       
                     </motion.div>

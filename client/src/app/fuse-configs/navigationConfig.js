@@ -8,11 +8,11 @@ const navigationConfig = [
 		role: []
 	},
 	{
-		id: 'transactions',
-		title: 'Your Transactions',
+		id: 'my-transactions',
+		title: 'My Transactions',
 		type: 'item',
 		icon: 'whatshot',
-		url: '/customer/transaction',
+		url: '/mytransaction/list',
 		role: [1,2]
 	},
 	{
@@ -44,6 +44,14 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'whatshot',
 				url: '/log/list',
+				role: [1]
+			},
+			{
+				id: 'transactions',
+				title: 'All Transactions',
+				type: 'item',
+				icon: 'whatshot',
+				url: '/transaction/list',
 				role: [1]
 			}
 		]

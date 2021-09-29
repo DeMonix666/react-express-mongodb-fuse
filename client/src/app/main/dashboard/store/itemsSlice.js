@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, createEntityAdapter} from "@reduxjs/tool
 import axios from "axios";
 import { showMessage } from 'app/store/fuse/messageSlice';
 
-export const getItems = createAsyncThunk('dashboard/item/list', async (params, { dispatch }) => {
+export const getItems = createAsyncThunk('items/item/list', async (params, { dispatch }) => {
     const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/items/list`, {
         page: params.page
     });
@@ -16,18 +16,10 @@ export const getItems = createAsyncThunk('dashboard/item/list', async (params, {
     return data;
 });
 
-
-export const addToCart = createAsyncThunk('dashboard/addToCart', async item => {
-    return item;
-});
-
-
-const dashboardSlice = createSlice({
-    name: 'dashboard',
+const itemsSlice = createSlice({
+    name: 'items',
     initialState: {
         collection:[],
-        basket:[],
-        total:0,
         pagination: {
             page: 0,
             pages: 0,
@@ -36,29 +28,8 @@ const dashboardSlice = createSlice({
         }
     },
     reducers: {
-        clearBasket: (state) => {
-            state.basket = [];
-            state.total = 0;
-        }
     },
     extraReducers: {
-        [addToCart.fulfilled]: (state, action) => {
-            const item = action.payload;
-            const index = state.basket.findIndex(_item => _item._id === item._id);
-
-            if (index === -1){
-                state.basket.push({
-                    _id: item._id,
-                    name : item.name,
-                    price: item.price,
-                    quantity: 1
-                });
-            } else {
-                state.basket[index].quantity += 1;
-            }
-
-            state.total += item.price;
-        },
         [getItems.fulfilled]: (state, action) => {
             if (action.payload.code === 1){
                 state.collection = action.payload.data.collection;
@@ -76,6 +47,6 @@ const dashboardSlice = createSlice({
     }
 });
 
-export const { clearBasket } = dashboardSlice.actions;
+//export const { } = itemsSlice.actions;
 
-export default dashboardSlice.reducer;
+export default itemsSlice.reducer;
