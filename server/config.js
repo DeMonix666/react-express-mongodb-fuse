@@ -8,7 +8,6 @@ const requestIp = require("request-ip");
 const rateLimit = require("express-rate-limit");
 const cors = require('cors');
 const helper = require("@helper");
-const logs = require("@model/logs");
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -33,17 +32,13 @@ const limiter = rateLimit({
     windowMs: process.env.MAX_REQUEST_TIMELIMIT * 60 * 1000,
     max: process.env.MAX_REQUEST_LIMIT,
     handler: async (req, res) => {
-        const ip = req.clientIp;
+        const msg = 'You sent too many requests. Please wait a while then try again';
 
-        const log = await logs.update({
-            ip: ip,
-            url: req.originalUrl,
-            type: 2, // error spamming
-            created_at: helper.timestamp()
-        });
+        helper.addLog(req, 2, msg);
 
-        return res.status(666).json({
-          error: 'You sent too many requests. Please wait a while then try again'
+        return res.status(200).json({
+            code: 0,
+            message: msg
         })
     }
     // message: {
@@ -55,12 +50,7 @@ const limiter = rateLimit({
 const logRequest = async(req, res, next) => {
     const ip = req.clientIp;
 
-    const log = await logs.update({
-        ip: ip,
-        url: req.originalUrl,
-        type: 1, // success
-        created_at: helper.timestamp()
-    });
+    helper.addLog(req, 1, '');
 
     next();
 }
@@ -70,30 +60,38 @@ const logRequest = async(req, res, next) => {
  */
 const users = require("./routes/users");
 const items = require("./routes/items");
+const logs = require("./routes/logs");
 const test = require("./routes/test");
 
 app.use("/api/users", logRequest, limiter, users);
 app.use("/api/items", logRequest, limiter, items);
+app.use("/api/logs", logRequest, limiter, logs);
 app.use("/api/test", logRequest, limiter, test);
 
 /**
  * Error handlers
  */
 app.use((req, res, next) => {
-    res.status(404);
+    const msg = 'page not found';
+    helper.addLog(req, 2, msg);
+
+    res.status(200);
     res.json({
         code: 0,
-        message: "page not found"
+        message: msg
     });
     return false;
 });
 
 app.use((error, req, res, next) => {
+    const msg = 'system failed';
+    helper.addLog(req, 2, msg);
+
     res.status(error.status || 500);
 
     res.json({
         code: 0,
-        message: "system failed",
+        message: msg,
         result: error //error.message
     });
 });

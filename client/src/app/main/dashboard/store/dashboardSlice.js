@@ -1,20 +1,23 @@
 import { createSlice, createAsyncThunk, createEntityAdapter} from "@reduxjs/toolkit";
 import axios from "axios";
+import { showMessage } from 'app/store/fuse/messageSlice';
 
-export const getItems = createAsyncThunk('dashboard/item/list', async params => {
+export const getItems = createAsyncThunk('dashboard/item/list', async (params, { dispatch }) => {
     const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/items/list`, {
         page: params.page
     });
 
     const data = await response.data;
     
+    if (data.code === 0 && data.message !== undefined){
+        dispatch(showMessage({ message: data.message }));
+    }
+
     return data;
 });
 
 
 export const addToCart = createAsyncThunk('dashboard/addToCart', async item => {
-    console.log(item)
-
     return item;
 });
 

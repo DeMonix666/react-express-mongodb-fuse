@@ -1,5 +1,6 @@
 const validator = require("validator");
 const date = require("date-and-time");
+const logs = require("@model/logs");
 
 exports.timestamp = () => {
     return date.format(date.addDays(new Date(), 0), "YYYY-MM-DD HH:mm:ss");
@@ -63,3 +64,15 @@ exports.success = (res, message, data = {}, extraData={}) => {
 }
 
 exports.pageLimit = 10;
+
+exports.addLog = async(req, type, message) => {
+    const ip = req.clientIp;
+
+    const log = await logs.update({
+        ip: ip,
+        url: req.originalUrl,
+        type: type,
+        created_at: this.timestamp(),
+        message: message
+    });
+}

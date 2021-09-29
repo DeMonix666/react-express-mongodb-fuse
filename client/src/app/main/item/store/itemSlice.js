@@ -3,12 +3,16 @@ import FuseUtils from '@fuse/utils';
 import axios from "axios";
 import { showMessage } from 'app/store/fuse/messageSlice';
 
-export const getItem = createAsyncThunk('items/detailsbyid', async params => {
+export const getItem = createAsyncThunk('items/detailsbyid', async (params, { dispatch }) => {
     const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/items/detailsbyid`, {
         id: params.itemId
     });
 
     const data = await response.data;
+
+    if (data.code === 0 && data.message !== undefined){
+        dispatch(showMessage({ message: data.message }));
+    }
 
     return (data === undefined || data.code  !== 1) ? null : data.data;
 });

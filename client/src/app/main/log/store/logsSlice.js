@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk, createEntityAdapter} from "@reduxjs/tool
 import axios from "axios";
 import { showMessage } from 'app/store/fuse/messageSlice';
 
-export const getItems = createAsyncThunk('items/list', async (params, { dispatch }) => {
-    const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/items/list`, {
+export const getLogs = createAsyncThunk('logs/list', async (params, { dispatch }) => {
+    const response = await axios.post(`${process.env.REACT_APP_ENDPOINT}/logs/list`, {
         page: params.page
     });
 
@@ -16,10 +16,8 @@ export const getItems = createAsyncThunk('items/list', async (params, { dispatch
     return data;
 });
 
-const itemsAdapter = createEntityAdapter({});
-
-const itemsSlice = createSlice({
-    name: 'items',
+const logsSlice = createSlice({
+    name: 'logs',
     initialState: {
         collection:[],
         pagination: {
@@ -32,7 +30,7 @@ const itemsSlice = createSlice({
     reducers: {
     },
     extraReducers: {
-        [getItems.fulfilled]: (state, action) => {
+        [getLogs.fulfilled]: (state, action) => {
             if (action.payload.code === 1){
                 state.collection = action.payload.data.collection;
                 state.pagination = action.payload.data.pagination;
@@ -49,4 +47,4 @@ const itemsSlice = createSlice({
     }
 });
 
-export default itemsSlice.reducer;
+export default logsSlice.reducer;

@@ -7,6 +7,7 @@ const LogsSchema = mongoose.Schema(
     ip: {type: String, require: true, default: null},
     url: {type: String, require: true, default: null},
     type: {type: Number, require: true, default: 1},
+    message: {type: String, require: false, default: null},
     created_at: {type: String, require: true, default: null}
   },
   {
@@ -18,6 +19,7 @@ const defaultReturn = {
     _id: 1,
     ip: 1,
     type:1,
+    message:1,
     created_at: 1
 };
 
@@ -46,7 +48,9 @@ exports.update = async post => {
     })
 }
 
-exports.list = async (page) => {
+exports.list = async (page, pageLimit = 10) => {
+    if (!pageLimit) pageLimit = helper.pageLimit;
+        
     return await Logs.aggregate([
         // {
         //     $project: {
@@ -54,7 +58,7 @@ exports.list = async (page) => {
         // },
         {
             $sort: {
-                name: 1
+                created_at: 1
             }
         },
         {
@@ -74,8 +78,8 @@ exports.list = async (page) => {
                 collection: {
                     $slice: [
                         "$collection",
-                        page * helper.pageLimit,
-                        helper.pageLimit
+                        page * pageLimit,
+                        pageLimit
                     ]
                 },
                 pagination: {
@@ -87,10 +91,10 @@ exports.list = async (page) => {
     .then(value => {
         if (value.length) {
             value[0].pagination["pages"] = Math.ceil(
-                value[0].pagination.total / helper.pageLimit
+                value[0].pagination.total / pageLimit
             );
             value[0].pagination["page"] = page + 1;
-            value[0].pagination["limit"] = helper.pageLimit;
+            value[0].pagination["limit"] = pageLimit;
 
             return value[0];
         } else {
@@ -100,7 +104,7 @@ exports.list = async (page) => {
                     total: 0,
                     pages: 0,
                     page: 0,
-                    limit: helper.pageLimit
+                    limit: pageLimit
                 }
             };
             return value;
