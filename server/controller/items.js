@@ -58,9 +58,12 @@ exports.detailsbyid = async (req, res) => {
 
 exports.list = async (req, res) => {
     let page = req.sanitize(req.body.page);
-    if (page == undefined)  page = 1;
+    let limit = req.sanitize(req.body.limit);
 
-    let result = await items.list(page - 1);
+    if (page == undefined)  page = 0;
+    if (limit == undefined)  limit = 10;
+
+    let result = await items.list(parseInt(page), parseInt(limit));
 
     return helper.success(res, '', result);
 }

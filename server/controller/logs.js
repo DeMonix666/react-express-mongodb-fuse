@@ -6,9 +6,12 @@ const logs = require("@model/logs");
 
 exports.list = async (req, res) => {
     let page = req.sanitize(req.body.page);
-    if (page == undefined)  page = 1;
+    let limit = req.sanitize(req.body.limit);
 
-    let result = await logs.list(page - 1, 100);
+    if (page == undefined)  page = 0;
+    if (limit == undefined)  limit = 100;
+
+    let result = await logs.list(parseInt(page), parseInt(limit));
 
     return helper.success(res, '', result);
 }

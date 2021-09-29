@@ -30,18 +30,24 @@ exports.pay = async (req, res) => {
 
 exports.list = async (req, res) => {
     let page = req.sanitize(req.body.page);
-    if (page == undefined)  page = 1;
+    let limit = req.sanitize(req.body.limit);
 
-    let result = await transactions.list(null, page - 1);
+    if (page == undefined)  page = 0;
+    if (limit == undefined)  limit = 10;
+
+    let result = await transactions.list(null, parseInt(page), parseInt(limit));
 
     return helper.success(res, '', result);
 }
 
 exports.mylist = async (req, res) => {
     let page = req.sanitize(req.body.page);
-    if (page == undefined)  page = 1;
+    let limit = req.sanitize(req.body.limit);
 
-    let result = await transactions.list(req.user._id.toString(), page - 1);
+    if (page == undefined)  page = 0;
+    if (limit == undefined)  limit = 10;
+
+    let result = await transactions.list(req.user._id.toString(), parseInt(page), parseInt(limit));
 
     return helper.success(res, '', result);
 }

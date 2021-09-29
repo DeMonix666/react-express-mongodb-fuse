@@ -154,7 +154,7 @@ exports.search = async post => {
   })
 }
 
-exports.list = async (page) => {
+exports.list = async (page, pageLimit = 10) => {
     return await Users.aggregate([
         {
             $project: {
@@ -183,8 +183,8 @@ exports.list = async (page) => {
                 collection: {
                     $slice: [
                         "$collection",
-                        page * helper.pageLimit,
-                        helper.pageLimit
+                        page * pageLimit,
+                        pageLimit
                     ]
                 },
                 pagination: {
@@ -195,13 +195,12 @@ exports.list = async (page) => {
     ])
     .then(value => {
         if (value.length) {
-            value[0].pagination["pages"] = Math.ceil(
-                value[0].pagination.total / helper.pageLimit
-            );
-            value[0].pagination["page"] = page + 1;
-            value[0].pagination["limit"] = helper.pageLimit;
+            const temp = value[0];
+            temp.pagination['pages'] = Math.ceil(temp.pagination.total / pageLimit);
+            temp.pagination["limit"] = pageLimit;
+            temp.pagination["page"] = page;
 
-            return value[0];
+            return temp;
         } else {
             value = {
                 collection: [],
@@ -209,7 +208,7 @@ exports.list = async (page) => {
                     total: 0,
                     pages: 0,
                     page: 0,
-                    limit: helper.pageLimit
+                    limit: pageLimit
                 }
             };
             return value;

@@ -49,8 +49,6 @@ exports.update = async post => {
 }
 
 exports.list = async (page, pageLimit = 10) => {
-    if (!pageLimit) pageLimit = helper.pageLimit;
-        
     return await Logs.aggregate([
         // {
         //     $project: {
@@ -90,13 +88,12 @@ exports.list = async (page, pageLimit = 10) => {
     ])
     .then(value => {
         if (value.length) {
-            value[0].pagination["pages"] = Math.ceil(
-                value[0].pagination.total / pageLimit
-            );
-            value[0].pagination["page"] = page + 1;
-            value[0].pagination["limit"] = pageLimit;
+            const temp = value[0];
+            temp.pagination['pages'] = Math.ceil(temp.pagination.total / pageLimit);
+            temp.pagination["limit"] = pageLimit;
+            temp.pagination["page"] = page;
 
-            return value[0];
+            return temp;
         } else {
             value = {
                 collection: [],
